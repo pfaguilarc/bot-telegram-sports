@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  bot-telegram:
+    build: .
+    container_name: telegram-futbol-bot
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - bot_data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - bot_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  bot_network:
+    driver: bridge
+
+volumes:
+  bot_data:
